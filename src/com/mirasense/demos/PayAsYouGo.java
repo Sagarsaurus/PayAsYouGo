@@ -1,5 +1,10 @@
 package com.mirasense.demos;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
@@ -101,7 +106,11 @@ import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
 public class PayAsYouGo extends Activity implements ScanditSDKListener {
 
     // The main object for recognizing a displaying barcodes.
+	private String apiLink = "https://api.scandit.com/v2/products/";
     private ScanditSDK mBarcodePicker;
+    //overall link that will return the JSON object is apiLink+barcode+?+key=+cleanedBarcode+"?"+"key="sScanditSdkAppKey
+    //example: https://api.scandit.com/v2/products/9781401323257?key=a390vup2xkl6nDeJ3mXI7jT
+    //this will return a JSON object.  For now, display the info from the JSON on the screen as a Toast
     
     // Enter your Scandit SDK App key here.
     // Your Scandit SDK App key is available via your Scandit SDK web account.
