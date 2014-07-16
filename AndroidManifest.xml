@@ -18,7 +18,7 @@
         	android:label="@string/app_name" 
         	android:theme="@android:style/Theme.NoTitleBar"
         	android:allowBackup="true">
-        <activity android:name="com.mirasense.demos.ScanditSDKDemoSimple" 
+        <activity android:name="com.mirasense.demos.PayAsYouGo" 
                   android:screenOrientation="sensor"
                   android:label="@string/app_name">
             <intent-filter>

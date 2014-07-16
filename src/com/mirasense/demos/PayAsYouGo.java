@@ -98,14 +98,14 @@ import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
  * See the License for the specific language governing premissions and
  * limitations under the License.
  */
-public class ScanditSDKDemoSimple extends Activity implements ScanditSDKListener {
+public class PayAsYouGo extends Activity implements ScanditSDKListener {
 
     // The main object for recognizing a displaying barcodes.
     private ScanditSDK mBarcodePicker;
     
     // Enter your Scandit SDK App key here.
     // Your Scandit SDK App key is available via your Scandit SDK web account.
-    public static final String sScanditSdkAppKey = "";
+    public static final String sScanditSdkAppKey = "ssXCBgyBEeSC49LT/JBa3QJKCErH3i9NgTH7beCm8ps";
 	
 	
     @Override
