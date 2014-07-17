@@ -106,16 +106,21 @@ import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
 public class PayAsYouGo extends Activity implements ScanditSDKListener {
 
     // The main object for recognizing a displaying barcodes.
-	private String apiLink = "https://api.scandit.com/v2/products/";
+	private String scanditApiLink = "https://api.scandit.com/v2/products/";
     private ScanditSDK mBarcodePicker;
+    private String walmartApiLinkFirstHalf = "http://api.walmartlabs.com/v1/feeds/";
+    private String walmartApiLinkSecondHalf = "?apiKey=";
+
     //overall link that will return the JSON object is apiLink+barcode+?+key=+cleanedBarcode+"?"+"key="sScanditSdkAppKey
     //example: https://api.scandit.com/v2/products/9781401323257?key=a390vup2xkl6nDeJ3mXI7jT
     //this will return a JSON object.  For now, display the info from the JSON on the screen as a Toast
     
+    //To run query with Walmart API, use walmartApiLinkFirstHalf + (cleanedBarcode converted to item ID) + walmartApiLinkSecondHalf + "{" + walmartKey + "}"
+    
     // Enter your Scandit SDK App key here.
     // Your Scandit SDK App key is available via your Scandit SDK web account.
     public static final String sScanditSdkAppKey = "ssXCBgyBEeSC49LT/JBa3QJKCErH3i9NgTH7beCm8ps";
-	
+    private static final String walmartKey = "s63p25pp2swxvtthpn8p6a9j";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
