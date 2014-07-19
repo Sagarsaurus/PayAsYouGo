@@ -1,11 +1,26 @@
 package com.mirasense.demos;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -108,14 +123,15 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
     // The main object for recognizing a displaying barcodes.
 	private String scanditApiLink = "https://api.scandit.com/v2/products/";
     private ScanditSDK mBarcodePicker;
-    private String walmartApiLinkFirstHalf = "http://api.walmartlabs.com/v1/feeds/";
-    private String walmartApiLinkSecondHalf = "?apiKey=";
+    private String walmartApiLinkFirstHalf = "http://api.walmartlabs.com/v1/search?apiKey=";
+    private String walmartApiLinkSecondHalf = "&query=";
+    private String toSet = "";
 
     //overall link that will return the JSON object is apiLink+barcode+?+key=+cleanedBarcode+"?"+"key="sScanditSdkAppKey
     //example: https://api.scandit.com/v2/products/9781401323257?key=a390vup2xkl6nDeJ3mXI7jT
     //this will return a JSON object.  For now, display the info from the JSON on the screen as a Toast
     
-    //To run query with Walmart API, use walmartApiLinkFirstHalf + (cleanedBarcode converted to item ID) + walmartApiLinkSecondHalf + "{" + walmartKey + "}"
+    //To run query with Walmart API, use http://api.walmartlabs.com/v1/search?apiKey={apiKey}&query={UPC}
     
     // Enter your Scandit SDK App key here.
     // Your Scandit SDK App key is available via your Scandit SDK web account.
@@ -191,28 +207,71 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
                 cleanedBarcode += barcode.charAt(i);
             }
         }
+        	
+        HttpGetter get = new HttpGetter();
+        try {
+			get.execute(new URI(walmartApiLinkFirstHalf+walmartKey+walmartApiLinkSecondHalf+cleanedBarcode));
+			Toast.makeText(this, toSet, Toast.LENGTH_LONG).show();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
-        Toast.makeText(this, symbology + ": " + cleanedBarcode, Toast.LENGTH_LONG).show();
+    }	
+        	//JSONObject json = new JSONObject(PayAsYouGo.convertStreamToString(response.getEntity().getContent()));
+		@Override
+		public void didCancel() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+	    public void didManualSearch(String entry) {
+	    	Toast.makeText(this, "User entered: " + entry, Toast.LENGTH_LONG).show();
+	    }
+
+public static String convertStreamToString(InputStream inputStream) throws IOException {
+    if (inputStream != null) {
+        Writer writer = new StringWriter();
+
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"),1024);
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } finally {
+            inputStream.close();
+        }
+        return writer.toString();
+    } else {
+        return "";
     }
+}
+
+	private class HttpGetter extends AsyncTask<URI, Void, Void> {
+		@Override
+		protected Void doInBackground(URI... params) {
+
+			try {
+				HttpResponse response = null;
+				
+				HttpClient client = new DefaultHttpClient();
+				HttpGet get = new HttpGet(params[0]);
+				response = client.execute(get);
+				if(response==null) {
+			    	toSet = "Failed";
+			    	return null;
+				}
+				toSet = PayAsYouGo.convertStreamToString(response.getEntity().getContent());
+
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
     
-    /** 
-     * Called when the user entered a bar code manually.
-     * 
-     * @param entry The information entered by the user.
-     */
-    public void didManualSearch(String entry) {
-    	Toast.makeText(this, "User entered: " + entry, Toast.LENGTH_LONG).show();
-    }
     
-    @Override
-    public void didCancel() {
-        mBarcodePicker.stopScanning();
-        finish();
-    }
-    
-    @Override
-    public void onBackPressed() {
-        mBarcodePicker.stopScanning();
-        finish();
-    }
 }
