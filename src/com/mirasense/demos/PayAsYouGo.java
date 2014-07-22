@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -126,7 +127,8 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
     private String walmartApiLinkFirstHalf = "http://api.walmartlabs.com/v1/search?apiKey=";
     private String walmartApiLinkSecondHalf = "&query=";
     private String toSet = "";
-
+    private ArrayList<CartItem> cart = new ArrayList<CartItem>();
+    
     //overall link that will return the JSON object is apiLink+barcode+?+key=+cleanedBarcode+"?"+"key="sScanditSdkAppKey
     //example: https://api.scandit.com/v2/products/9781401323257?key=a390vup2xkl6nDeJ3mXI7jT
     //this will return a JSON object.  For now, display the info from the JSON on the screen as a Toast
@@ -134,7 +136,7 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
     //To run query with Walmart API, use http://api.walmartlabs.com/v1/search?apiKey={apiKey}&query={UPC}
     
     // Enter your Scandit SDK App key here.
-    // Your Scandit SDK App key is available via your Scandit SDK web account.
+    // Your Scandit SDK App key is avail able via your Scandit SDK web account.
     public static final String sScanditSdkAppKey = "ssXCBgyBEeSC49LT/JBa3QJKCErH3i9NgTH7beCm8ps";
     private static final String walmartKey = "s63p25pp2swxvtthpn8p6a9j";
 	
@@ -210,7 +212,7 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
         	
         HttpGetter get = new HttpGetter();
         try {
-			get.execute(new URI(walmartApiLinkFirstHalf+walmartKey+walmartApiLinkSecondHalf+cleanedBarcode));
+            get.execute(new URI(walmartApiLinkFirstHalf+walmartKey+walmartApiLinkSecondHalf+cleanedBarcode));
 			Toast.makeText(this, toSet, Toast.LENGTH_LONG).show();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
@@ -227,7 +229,15 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
 
 		@Override
 	    public void didManualSearch(String entry) {
-	    	Toast.makeText(this, "User entered: " + entry, Toast.LENGTH_LONG).show();
+		    HttpGetter get = new HttpGetter();
+		    try
+		    {
+    		    get.execute(new URI(walmartApiLinkFirstHalf+walmartKey+walmartApiLinkSecondHalf+entry));
+    	    	Toast.makeText(this, "User entered: " + toSet, Toast.LENGTH_LONG).show();
+		    } catch (URISyntaxException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
 	    }
 
 public static String convertStreamToString(InputStream inputStream) throws IOException {
