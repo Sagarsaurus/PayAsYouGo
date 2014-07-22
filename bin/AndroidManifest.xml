@@ -45,6 +45,10 @@
             android:name="project.views.ShoppingCart"
             android:label="@string/title_activity_shopping_cart" >
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>
