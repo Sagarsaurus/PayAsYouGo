@@ -11,10 +11,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -26,6 +31,7 @@ import android.widget.Toast;
 import com.mirasense.scanditsdk.ScanditSDKAutoAdjustingBarcodePicker;
 import com.mirasense.scanditsdk.interfaces.ScanditSDK;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
+import com.semantics3.api.Products;
 
 /**
  * Simple demo application illustrating the use of the Scandit SDK.
@@ -273,6 +279,21 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
 			return null;
 		}
     	
+    }
+    
+    //Should call this method to display results.
+    //We can modify when required.
+    //API Key: SEM31266E9F40F0AB5D20DA00580A9E11AA6
+    //API Secret: ZDg5ODA0OTE4MDdlZjA4Njc4OTIzYzBiN2MyNzJkZGY
+    public static void sendRequest(Products products, Object... objects) throws OAuthMessageSignerException, 
+												OAuthExpectationFailedException, OAuthCommunicationException, IOException {
+		//Write request
+    	products.productsField(objects);
+		//Make Request
+		JSONObject results = products.getProducts();
+		//results = products.get();
+		//This is temporary. Will add to a listView and display results.
+		System.out.println(results);
     }
     
 }
