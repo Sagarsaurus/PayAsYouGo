@@ -283,8 +283,6 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
     
     //Should call this method to display results.
     //We can modify when required.
-    //API Key: SEM31266E9F40F0AB5D20DA00580A9E11AA6
-    //API Secret: ZDg5ODA0OTE4MDdlZjA4Njc4OTIzYzBiN2MyNzJkZGY
     public static void sendRequest(Products products, Object... objects) throws OAuthMessageSignerException, 
 												OAuthExpectationFailedException, OAuthCommunicationException, IOException {
 		//Write request
