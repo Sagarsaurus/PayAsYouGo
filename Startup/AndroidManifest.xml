@@ -26,7 +26,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
-            android:name="project.startup.view.HomePage"
+            android:name="project.startup.logic.main.PayAsYouGo"
             android:label="@string/app_name"
             android:screenOrientation="sensor" >
             <intent-filter>
