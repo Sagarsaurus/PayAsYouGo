@@ -1,4 +1,4 @@
-package org.json;
+package org.jsonplus;
 
 /*
  Copyright (c) 2002 JSON.org
@@ -32,6 +32,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.jsonplus.JSONArray;
+import org.jsonplus.JSONException;
+import org.jsonplus.JSONObject;
+import org.jsonplus.JSONTokener;
 
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a

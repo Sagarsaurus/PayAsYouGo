@@ -5,8 +5,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.jsonplus.JSONObject;
+import org.jsonplus.JSONTokener;
 
 import com.semantics3.errors.Semantics3Exception;
 

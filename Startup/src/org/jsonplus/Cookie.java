@@ -1,4 +1,8 @@
-package org.json;
+package org.jsonplus;
+
+import org.jsonplus.JSONException;
+import org.jsonplus.JSONObject;
+import org.jsonplus.JSONTokener;
 
 /*
 Copyright (c) 2002 JSON.org

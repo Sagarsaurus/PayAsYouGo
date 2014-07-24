@@ -1,7 +1,10 @@
-package org.json;
+package org.jsonplus;
 
 import java.io.IOException;
 import java.io.Writer;
+
+import org.jsonplus.JSONException;
+import org.jsonplus.JSONObject;
 
 /*
 Copyright (c) 2006 JSON.org

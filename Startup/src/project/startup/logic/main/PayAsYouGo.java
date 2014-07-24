@@ -1,25 +1,13 @@
 package project.startup.logic.main;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
+import org.jsonplus.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -127,16 +115,16 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
     @SuppressWarnings("unused")
 	private String scanditApiLink = "https://api.scandit.com/v2/products/";
 	private ScanditSDK mBarcodePicker;
-    private String walmartApiLinkFirstHalf = "http://api.walmartlabs.com/v1/search?apiKey=";
-    private String walmartApiLinkSecondHalf = "&query=";
-    private String toSet = "";
+    private static String toSet = "";
+    public static final String sScanditSdkAppKey = "";
+    private static final String semantics3Key = "";
+    private static final String semantics3SecretKey = "";
     @SuppressWarnings("unused")
 	private ArrayList<CartItem> cart = new ArrayList<CartItem>();
     
     // Enter your Scandit SDK App key here.
     // Your Scandit SDK App key is available via your Scandit SDK web account.
-    public static final String sScanditSdkAppKey = "ssXCBgyBEeSC49LT/JBa3QJKCErH3i9NgTH7beCm8ps";
-	private static final String walmartKey = "s63p25pp2swxvtthpn8p6a9j";
+	private HttpGetter get;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,14 +196,9 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
             }
         }
         	
-        HttpGetter get = new HttpGetter();
-        try {
-            get.execute(new URI(walmartApiLinkFirstHalf+walmartKey+walmartApiLinkSecondHalf+cleanedBarcode));
-			Toast.makeText(this, toSet, Toast.LENGTH_LONG).show();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-        
+        get = new HttpGetter();
+        get.execute(cleanedBarcode);
+        Toast.makeText(this, toSet, Toast.LENGTH_LONG).show();
     }
     
     /** 
@@ -224,7 +207,9 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
      * @param entry The information entered by the user.
      */
     public void didManualSearch(String entry) {
-    	Toast.makeText(this, "User entered: " + entry, Toast.LENGTH_LONG).show();
+    	get = new HttpGetter();
+    	get.execute(entry);
+    	Toast.makeText(this, "User entered: " + toSet, Toast.LENGTH_LONG).show();
     }
     
     @Override
@@ -239,59 +224,52 @@ public class PayAsYouGo extends Activity implements ScanditSDKListener {
         finish();
     }
     
-    public static String convertStreamToString(InputStream inputStream) throws IOException {
-    	if (inputStream != null) {
-    		Writer writer = new StringWriter();
-    		
-    		char[] buffer = new char[1024];
-    		try {
-				Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 1024);
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
-			} finally {
-				inputStream.close();
-			}
-    		return writer.toString();
-    	} else {
-    		return "";
-    	}
-    }
     
-    private class HttpGetter extends AsyncTask<URI, Void, Void> {
+    private class HttpGetter extends AsyncTask<String, Void, Void> {
 
 		@Override
-		protected Void doInBackground(URI... params) {
-			try {
-				HttpResponse response = null;
-				HttpClient client = new DefaultHttpClient();
-				HttpGet get = new HttpGet(params[0]);
-				response = client.execute(get);
-				if (response == null) {
-					toSet = "Failed";
+		protected Void doInBackground(String... params) {
+				Products product = new Products(
+						semantics3Key,
+						semantics3SecretKey
+				);
+				
+				try {
+					sendRequest(product, params[0]);
 					return null;
+				} catch (OAuthMessageSignerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OAuthExpectationFailedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OAuthCommunicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				toSet = PayAsYouGo.convertStreamToString(response.getEntity().getContent());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
+				toSet = "Sorry, no item with that barcode";
+				return null;
 		}
     	
     }
     
     //Should call this method to display results.
     //We can modify when required.
-    public static void sendRequest(Products products, Object... objects) throws OAuthMessageSignerException, 
+    public static void sendRequest(Products products, String...barcodes) throws OAuthMessageSignerException, 
 												OAuthExpectationFailedException, OAuthCommunicationException, IOException {
-		//Write request
-    	products.productsField(objects);
+		for(int i = 0; i < barcodes.length; i++) {
+	    	products.productsField("upc", barcodes[i]);
+		}
+    	//Write request
+
 		//Make Request
 		JSONObject results = products.getProducts();
 		//results = products.get();
 		//This is temporary. Will add to a listView and display results.
-		System.out.println(results);
+		toSet = results.toString();
     }
     
 }

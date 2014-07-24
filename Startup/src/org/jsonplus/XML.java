@@ -1,4 +1,4 @@
-package org.json;
+package org.jsonplus;
 
 /*
 Copyright (c) 2002 JSON.org
@@ -25,6 +25,10 @@ SOFTWARE.
 */
 
 import java.util.Iterator;
+
+import org.jsonplus.JSONArray;
+import org.jsonplus.JSONException;
+import org.jsonplus.JSONObject;
 
 
 /**

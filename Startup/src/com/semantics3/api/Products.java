@@ -6,7 +6,7 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
-import org.json.JSONObject;
+import org.jsonplus.JSONObject;
 
 import com.semantics3.Util;
 

@@ -1,4 +1,4 @@
-package org.json;
+package org.jsonplus;
 
 /*
 Copyright (c) 2002 JSON.org
@@ -38,6 +38,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+
+import org.jsonplus.JSONArray;
+import org.jsonplus.JSONException;
+import org.jsonplus.JSONObject;
+import org.jsonplus.JSONTokener;
 
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its external

@@ -1,4 +1,4 @@
-package org.json;
+package org.jsonplus;
 
 public interface None {
     /**

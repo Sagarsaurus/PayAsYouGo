@@ -1,4 +1,4 @@
-package org.json;
+package org.jsonplus;
 
 /*
 Copyright (c) 2002 JSON.org
@@ -25,6 +25,9 @@ SOFTWARE.
 */
 
 import java.util.Iterator;
+
+import org.jsonplus.JSONException;
+import org.jsonplus.JSONObject;
 
 /**
  * Convert an HTTP header to a JSONObject and back.
